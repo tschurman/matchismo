@@ -7,20 +7,16 @@
 //
 
 #import "CardGameViewController.h"
-#import "PlayingCardDeck.h"
-#import "PlayingCard.h"
 #import "CardMatchingGame.h"
 
 @interface CardGameViewController ()
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) Deck *deck;
 @property (strong, nonatomic) CardMatchingGame *game;
-@property (strong, nonatomic) NSDictionary *requiredMatchesDictionary;
 
 // outlets
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *matchModeControl;
 @property (weak, nonatomic) IBOutlet UILabel *playStatusLabel;
 
 @end
@@ -44,25 +40,17 @@
 
 - (Deck *)createDeck
 {
-    return [[PlayingCardDeck alloc] init];
-}
-
-- (NSDictionary *)requiredMatchesDictionary
-{
-    if (!_requiredMatchesDictionary) {
-        _requiredMatchesDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
-            @"2", @"0", @"3", @"1", nil];
-    }
-    return _requiredMatchesDictionary;
+    return nil; // This is now an abstract class
 }
 
 #pragma mark - View Notification Handlers
 
+const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
+
 - (IBAction)touchCardButton:(UIButton *)sender
 {
     if (0 == self.flipCount) {
-        self.matchModeControl.enabled = NO;
-        self.game.requiredMatches = [[self.requiredMatchesDictionary valueForKey:[NSString stringWithFormat:@"%ld", (long)self.matchModeControl.selectedSegmentIndex]] intValue];
+        self.game.requiredMatches = GAME_REQUIRED_MATCHES_DEFAULT; // This is ok. If we have a selection control later to make something different, this can change.
     }
     
     NSUInteger chooseButtonIndex = [self.cardButtons indexOfObject:sender];
@@ -72,7 +60,6 @@
 }
 - (IBAction)touchResetButton:(UIButton *)sender {
     // reset the game and the UI
-    self.matchModeControl.enabled = YES;
     self.flipCount = 0;
     [self.game resetGameWithCardCount:self.cardButtons.count usingDeck:self.deck];
     [self updateUI];

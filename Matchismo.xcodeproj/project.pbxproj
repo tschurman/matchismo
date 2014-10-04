@@ -26,6 +26,7 @@
 		7005254919C8BAD70036647A /* Deck.m in Sources */ = {isa = PBXBuildFile; fileRef = 7005254819C8BAD70036647A /* Deck.m */; };
 		7005254C19C8BE8E0036647A /* PlayingCardDeck.m in Sources */ = {isa = PBXBuildFile; fileRef = 7005254B19C8BE8E0036647A /* PlayingCardDeck.m */; };
 		7005254F19C8EFB70036647A /* CardMatchingGame.m in Sources */ = {isa = PBXBuildFile; fileRef = 7005254E19C8EFB70036647A /* CardMatchingGame.m */; };
+		70F05D4619E096D60069BA2E /* PlayingCardGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70F05D4519E096D60069BA2E /* PlayingCardGameViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,8 @@
 		7005254B19C8BE8E0036647A /* PlayingCardDeck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayingCardDeck.m; path = Model/PlayingCardDeck.m; sourceTree = "<group>"; };
 		7005254D19C8EFB70036647A /* CardMatchingGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardMatchingGame.h; sourceTree = "<group>"; };
 		7005254E19C8EFB70036647A /* CardMatchingGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardMatchingGame.m; sourceTree = "<group>"; };
+		70F05D4419E096D60069BA2E /* PlayingCardGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingCardGameViewController.h; sourceTree = "<group>"; };
+		70F05D4519E096D60069BA2E /* PlayingCardGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingCardGameViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +133,8 @@
 				7005251D19C8A9670036647A /* Main.storyboard */,
 				7005252019C8A9670036647A /* CardGameViewController.h */,
 				7005252119C8A9670036647A /* CardGameViewController.m */,
+				70F05D4419E096D60069BA2E /* PlayingCardGameViewController.h */,
+				70F05D4519E096D60069BA2E /* PlayingCardGameViewController.m */,
 				7005252319C8A9670036647A /* Images.xcassets */,
 				7005254319C8B5FE0036647A /* Model */,
 				7005251219C8A9670036647A /* Supporting Files */,
@@ -308,6 +313,7 @@
 				7005254C19C8BE8E0036647A /* PlayingCardDeck.m in Sources */,
 				7005254919C8BAD70036647A /* Deck.m in Sources */,
 				7005254219C8B5F40036647A /* Card.m in Sources */,
+				70F05D4619E096D60069BA2E /* PlayingCardGameViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
