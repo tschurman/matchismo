@@ -313,7 +313,7 @@
                     <navigationItem key="navigationItem" title="Match" id="E0J-M3-cDf">
                         <barButtonItem key="rightBarButtonItem" title="History" id="O3F-hz-h0g">
                             <connections>
-                                <segue destination="Odd-VL-ySk" kind="push" id="JnT-Xo-UHN"/>
+                                <segue destination="Odd-VL-ySk" kind="push" identifier="Match History" id="JnT-Xo-UHN"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -385,7 +385,7 @@
                     <navigationItem key="navigationItem" title="Set" id="U1s-h0-UMi">
                         <barButtonItem key="rightBarButtonItem" title="History" id="JVB-i1-3b0">
                             <connections>
-                                <segue destination="Odd-VL-ySk" kind="push" id="aQm-oO-m3e"/>
+                                <segue destination="Odd-VL-ySk" kind="push" identifier="Set History" id="aQm-oO-m3e"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
