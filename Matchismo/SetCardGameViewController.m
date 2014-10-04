@@ -10,4 +10,10 @@
 
 @implementation SetCardGameViewController
 
+- (Deck *)createDeck
+{
+    return nil; // [[PlayingCardDeck alloc] init];
+}
+
+
 @end

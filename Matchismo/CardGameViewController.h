@@ -14,5 +14,4 @@
 // Abstract class that subclasses must override. Will return NULL otherwise.
 - (Deck *)createDeck;
 
-
 @end
