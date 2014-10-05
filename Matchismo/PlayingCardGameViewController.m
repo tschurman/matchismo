@@ -16,4 +16,10 @@
     return [[PlayingCardDeck alloc] init];
 }
 
+const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
+- (int)requiredCardsToMatch
+{
+    return GAME_REQUIRED_MATCHES_DEFAULT;
+}
+
 @end

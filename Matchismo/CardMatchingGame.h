@@ -34,7 +34,7 @@
 
 - (NSArray *) getLastMatchedCards;
 
-@property (nonatomic) NSInteger requiredMatches; // 2 - n
+@property (nonatomic) NSInteger requiredMatches; // 2 - n; default is 2
 @property (nonatomic) enum Status gameStatus;
 
 @property (nonatomic, readonly) NSInteger totalScore;

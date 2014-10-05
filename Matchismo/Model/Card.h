@@ -16,6 +16,9 @@
 // for whatever purposes subclassed by design.
 @property (strong, nonatomic) NSString *contents;
 
+// A card can be dealt face-up or face-down; this matters in a given context
+@property (nonatomic, getter=isFaceUp) BOOL faceUp;
+
 // A card can be "chosen" as a state in some context
 @property (nonatomic, getter = isChosen) BOOL chosen;
 
@@ -33,6 +36,7 @@
 
 - (void)reset;
 
+// This returns a score for matching this (self) card to the cards in the given array
 - (int)match:(NSArray *)otherCards;
 
 

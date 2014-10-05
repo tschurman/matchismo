@@ -24,6 +24,7 @@
                 [self addCard:card];
             }
         }
+
     }
     return self;
 }

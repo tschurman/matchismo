@@ -124,10 +124,12 @@ static const int COST_TO_CHOOSE = 1;
         self.lastScore = matchScore * MATCH_BONUS;
         self.totalScore += self.lastScore;
     } else {
-        // set all but the very last chosenCard.chosen to NO
+        // set all but the very last chosenCard.chosen to NO, and turn them back face-down
         for (Card* chosenCard in self.curChosenCards) {
-            if (chosenCard != [self.curChosenCards lastObject])
+            if (chosenCard != [self.curChosenCards lastObject]) {
                 chosenCard.chosen = NO;
+                chosenCard.faceUp = NO;
+            }
         }
         self.lastScore = MISMATCH_PENALTY;
 
@@ -144,6 +146,8 @@ static const int COST_TO_CHOOSE = 1;
     if (!card.isOutOfPlay) {
         if (card.isChosen) {
             card.chosen = NO;
+            // in this game, when a card is selected again, it is turned back "Face-down" - a state
+            card.faceUp = NO;
             
             // remove from chosenCards
             [_curChosenCards removeObject:card];
@@ -151,6 +155,9 @@ static const int COST_TO_CHOOSE = 1;
             
         } else {
             card.chosen = YES;
+            // In this game, when a card is chosen, it is turned "face-up" - a state
+            card.faceUp = YES;
+            
             // Add to chosenCards
             [_curChosenCards addObject:card];
             self.gameStatus = CardChosen;

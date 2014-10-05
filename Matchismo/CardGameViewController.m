@@ -12,7 +12,7 @@
 @interface CardGameViewController ()
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) Deck *deck;
-@property (strong, nonatomic) CardMatchingGame *game;
+@property (strong, nonatomic, readwrite) CardMatchingGame *game;
 
 // outlets
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
@@ -43,14 +43,17 @@
     return nil; // This is now an abstract class
 }
 
-#pragma mark - View Notification Handlers
+- (int)requiredCardsToMatch
+{
+    return 0; // this is not an abstract class
+}
 
-const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
+#pragma mark - View Notification Handlers
 
 - (IBAction)touchCardButton:(UIButton *)sender
 {
     if (0 == self.flipCount) {
-        self.game.requiredMatches = GAME_REQUIRED_MATCHES_DEFAULT; // This is ok. If we have a selection control later to make something different, this can change.
+        self.game.requiredMatches = [self requiredCardsToMatch];
     }
     
     NSUInteger chooseButtonIndex = [self.cardButtons indexOfObject:sender];
@@ -116,13 +119,14 @@ const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
     
 }
 
-- (void)updateUI
+- (void)updateUIScoreLabel
 {
-    [self updateUIStatusLabel];
-    
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld",
                             (long)self.game.totalScore];
-    
+}
+
+- (void)updateUIButtons
+{
     // now update each button
     for (UIButton *cardButton in self.cardButtons) {
         NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
@@ -132,17 +136,25 @@ const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
                               forState:UIControlStateNormal];
         cardButton.enabled = !card.isOutOfPlay;
     }
+}
+
+- (void)updateUI
+{
+    [self updateUIStatusLabel];
     
+    [self updateUIScoreLabel];
+    
+    [self updateUIButtons];
 }
 
 - (NSString *)titleForCard:(Card *)card
 {
-    return card.isChosen ? card.contents : @"";
+    return card.isFaceUp ? card.contents : @"";
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card
 {
-    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
+    return [UIImage imageNamed:card.isFaceUp ? @"cardfront" : @"cardback"];
 }
 
 @end

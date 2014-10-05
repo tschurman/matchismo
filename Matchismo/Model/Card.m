@@ -12,6 +12,7 @@
 
 - (void)reset
 {
+    self.faceUp = NO; // init face-down
     self.chosen = NO;
     self.matched = NO;
     self.lastCardsMatched = nil;
