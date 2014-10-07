@@ -28,7 +28,7 @@
 - (CardMatchingGame *)game
 {
     if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
-                                                          usingDeck:[self createDeck]];
+                                                          usingDeck:self.deck];
     return _game;
 }
 
@@ -76,6 +76,15 @@
 
 #pragma mark - UI Update and Helpers
 
+- (NSAttributedString *)attributedStringFromCards:(NSArray *)cards
+{
+    NSMutableString *cardsDrawnString = [[NSMutableString alloc] init];
+    for (Card* card in cards) {
+        [cardsDrawnString appendFormat:@"%@ ", card.contents];
+    }
+    return [[NSAttributedString alloc] initWithString:cardsDrawnString];
+}
+
 - (void)updateUIStatusLabel
 {
 //    dd a text label somewhere which desribes the results of the last consideration by the CardMatchingGame of a card choice by the user. Examples: “Matched J♥ J♠ for 4 points.” or “6♦ J♣ don’t match! 2 point penalty!” or “8♦” if only one card is chosen or even blank if no cards are chosen.
@@ -87,35 +96,28 @@
         case CardChosen:
         case CardUnchosen:
         {
-            NSMutableString *cardsDrawnString = [[NSMutableString alloc] init];
-            for (Card* card in self.game.curChosenCards) {
-                [cardsDrawnString appendFormat:@"%@ ", card.contents];
-            }
-            self.playStatusLabel.text = cardsDrawnString;
+            self.playStatusLabel.attributedText = [self attributedStringFromCards:self.game.curChosenCards];
             break;
         }
             
         case ScoredMatch:
         {
-            NSMutableString *cardsDrawnString = [[NSMutableString alloc] init];
-            [cardsDrawnString appendString:@"Matched "];
-            for (Card* card in self.game.lastChosenCards) {
-                [cardsDrawnString appendFormat:@"%@ ", card.contents];
-            }
-            [cardsDrawnString appendFormat:@"for %ld points.", (long)self.game.lastScore];
-            self.playStatusLabel.text = cardsDrawnString;
+            // Builds the string
+            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
+            [aLabelString appendAttributedString:[self attributedStringFromCards:self.game.lastChosenCards]];
+            NSString *endText = [NSString stringWithFormat:@" for %ld points.", (long)self.game.lastScore];
+            [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:endText]];
+            
+            self.playStatusLabel.attributedText = aLabelString;
             break;
         }
         
         case ScoredNoMatch:
         {
-            NSMutableString *cardsDrawnString = [[NSMutableString alloc] init];
-            [cardsDrawnString setString:@""];
-            for (Card* card in self.game.lastChosenCards) {
-                [cardsDrawnString appendFormat:@"%@ ", card.contents];
-            }
-            [cardsDrawnString appendFormat:@"don't match! %ld point penalty!", (long)self.game.lastScore];
-            self.playStatusLabel.text = cardsDrawnString;
+            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithAttributedString:[self attributedStringFromCards:self.game.lastChosenCards]];
+
+            [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %ld point penalty!", (long)self.game.lastScore]]];
+            self.playStatusLabel.attributedText = aLabelString;
             break;
         }
         
