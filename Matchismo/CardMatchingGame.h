@@ -26,8 +26,8 @@
 // Designated initializer
 - (instancetype)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck;
 
-// will end the current game and start a new game
-- (BOOL)resetGameWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck;
+// will end the current game and start a new game using the deck of cards set when the game was created
+- (BOOL)resetGameWithCardCount:(NSUInteger)count;
 
 - (void)chooseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;

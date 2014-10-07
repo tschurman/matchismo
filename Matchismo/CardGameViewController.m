@@ -48,7 +48,13 @@
     return 0; // this is not an abstract class
 }
 
-#pragma mark - View Notification Handlers
+#pragma mark - View Notification Handlers nad IBActions
+
+- (void)viewWillLayoutSubviews
+{
+    [self updateUI];
+}
+
 
 - (IBAction)touchCardButton:(UIButton *)sender
 {
@@ -64,7 +70,7 @@
 - (IBAction)touchResetButton:(UIButton *)sender {
     // reset the game and the UI
     self.flipCount = 0;
-    [self.game resetGameWithCardCount:self.cardButtons.count usingDeck:self.deck];
+    [self.game resetGameWithCardCount:self.cardButtons.count];
     [self updateUI];
 }
 

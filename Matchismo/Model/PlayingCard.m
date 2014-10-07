@@ -57,7 +57,7 @@ static const int DRAW_PENALTY_MULTIPLIER = 1; // plus draws >3
 
 + (NSArray *)validSuits
 {
-    return @[@"♤",@"♡",@"♧",@"♢"]; //
+    return @[@"♠️",@"♥️",@"♣️",@"♦️"]; //
 }
 
 + (NSArray *)rankStrings
@@ -170,17 +170,7 @@ static const int DRAW_PENALTY_MULTIPLIER = 1; // plus draws >3
             self.score = suitScore;
         }
     }
-    
-//    // for now match only a single other card
-//    if (1 == [otherCards count]) {
-//        PlayingCard *otherCard = [otherCards firstObject];
-//        if (otherCard.rank == self.rank) {
-//            score = 4;
-//        } else if ([otherCard.suit isEqualToString:self.suit]) {
-//            score = 1;
-//        }
-//    }
-    
+        
     return self.score;
 }
 

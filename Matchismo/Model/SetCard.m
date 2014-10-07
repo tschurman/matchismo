@@ -8,7 +8,10 @@
 
 #import "SetCard.h"
 
+static int referenceCount;
+
 @interface SetCard()
+
 @property (nonatomic, readwrite) enum SetCardShape shape;
 @property (nonatomic, readwrite) enum SetCardColor color;
 @property (nonatomic, readwrite) enum SetCardShade shade;
@@ -16,19 +19,10 @@
 
 @property (nonatomic) NSArray *propertyArray;
 
+
 @end
 
 @implementation SetCard
-
-#pragma mark - Class methods
-
-const int MAX_SET_NUMBER = 3;
-
-+ (int)maxNumber
-{
-    return MAX_SET_NUMBER; // magic?
-}
-
 
 #pragma mark - Initializers
 // Designated initializer -- note that once initialized, this card cannot be changed
@@ -48,12 +42,15 @@ const int MAX_SET_NUMBER = 3;
                            [NSNumber numberWithInt:self.color],
                            [NSNumber numberWithInt:self.shade],
                            [NSNumber numberWithInt:self.number]];
+    
+        referenceCount++;
+        NSLog(@"Creating SetCard: %d: ShapeColorShadeNumber: %d%d%d%d", referenceCount, self.shape, self.color, self.shade, self.number);
     }
 
     return self;
 }
 
-#pragma mark - overrides
+#pragma mark - Overrides
 - (NSString *)contents
 {
     return nil; // we're too complicated to be represented by a mere string
@@ -63,18 +60,34 @@ const int MAX_SET_NUMBER = 3;
 #pragma mark - Matching/Scoring Methods
 
 
-- (BOOL)isSetWithCards:(NSArray *)otherCards
+- (BOOL)isSetWithAllCards:(NSArray *)allCards
 {
     BOOL isSet = YES;
-
+    
+    if (allCards.count < 2)
+        return NO; // can't set with only 1 card
+    
     for (int propertyIndex=0; propertyIndex<self.propertyArray.count && isSet; propertyIndex++) {
+        
         // for each property in the property array...
-        BOOL isSame = self.propertyArray[propertyIndex] == [(SetCard *)otherCards propertyArray][propertyIndex]; // init to test for same/different
-
-        // test each card for the same property comparison result -- if the result changes, we're not a set
-        for (int cardIndex = 1; cardIndex<otherCards.count && isSet; cardIndex++) {
-            if (isSame != (self.propertyArray[propertyIndex] == [(SetCard *)otherCards[cardIndex] propertyArray][propertyIndex])) {
-                isSet = NO;
+        int test1, test2, test3;
+        BOOL bTest;
+        test1 = [[(SetCard *)allCards[0] propertyArray][propertyIndex] intValue];
+        test2 = [[(SetCard *)allCards[1] propertyArray][propertyIndex] intValue];
+        test3 = [[(SetCard *)allCards[2] propertyArray][propertyIndex] intValue];
+        
+        // Whether the property is the same or different - it must remain as such for all other card comparisons
+        BOOL isSameDiff = ([(SetCard *)allCards[0] propertyArray][propertyIndex] == [(SetCard *)allCards[1] propertyArray][propertyIndex]);
+        for (int primaryCardIndex = 0; primaryCardIndex<allCards.count-1 && isSet == YES; primaryCardIndex++) {
+            // test each card for the same property comparison result -- if the result changes, we're not a set
+            for (int secondaryCardIndex = 1; secondaryCardIndex<allCards.count && isSet; secondaryCardIndex++) {
+                if (primaryCardIndex != secondaryCardIndex) {
+                    bTest = ([(SetCard *)allCards[primaryCardIndex] propertyArray][propertyIndex] == [(SetCard *)allCards[secondaryCardIndex] propertyArray][propertyIndex]);
+                    bTest = isSameDiff != bTest;
+                    if (isSameDiff != ([(SetCard *)allCards[primaryCardIndex] propertyArray][propertyIndex] == [(SetCard *)allCards[secondaryCardIndex] propertyArray][propertyIndex])) {
+                        isSet = NO;
+                    }
+                }
             }
         }
     }
@@ -82,6 +95,7 @@ const int MAX_SET_NUMBER = 3;
     return isSet;
 }
 
+const int SET_BONUS_POINTS = 1;
 - (int)match:(NSArray *)otherCards
 {
     // ignoring super implementation of match, overriding completely
@@ -96,12 +110,16 @@ const int MAX_SET_NUMBER = 3;
     // We will not assume a specific number of cards
     
     if ([otherCards count] > 0) {
-       
-        // We only score if there is a SET
-        BOOL isSet = [self isSetWithCards:otherCards];
+        NSMutableArray *allCards = [NSMutableArray arrayWithArray:otherCards];
+        [allCards addObject:self];
         
-        // Now score it based on isSet
-        self.score = isSet ? (int)otherCards.count + 1 : 0; // casting down to int for self.score - ok
+        // We only score if there is a SET
+        BOOL isSet = [self isSetWithAllCards:allCards];
+        
+        // Now score it based on isSet.
+        // Ideally all the scoring methodology is stored in one place and we use lookup messages to retrieve how we should score
+        //
+        self.score = isSet ? (int)allCards.count + SET_BONUS_POINTS : 0; // casting down to int for self.score - ok
         
     }
 

@@ -17,6 +17,7 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
 }
 @property (nonatomic, readwrite) NSInteger totalScore;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
+@property (nonatomic, weak) Deck* deck;
 @end
 
 @implementation CardMatchingGame
@@ -27,14 +28,19 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
     
     if (self) {
         self.requiredMatches = DEFAULT_REQUIRED_MATCHES;
-        if (NO == [self initGameWithCardCount:count usingDeck:deck])
+        if (YES == [self dealNewGameWithCardCount:count usingDeck:deck]){
+            self.deck = deck;
+        
+        } else {
+            // failure
             self = nil;
+        }
     }
     
     return self;
 }
 
-- (BOOL)initGameWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
+- (BOOL)dealNewGameWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
 {
     BOOL ret = YES;
     
@@ -54,6 +60,7 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
         self.gameStatus = NewDeal;
         if (!_curChosenCards) _curChosenCards = [[NSMutableArray alloc] init];
         if (!_lastChosenCards) _lastChosenCards = [[NSMutableArray alloc] init];
+        
     } else {
         ret = NO;
     }
@@ -79,16 +86,16 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
     return _lastChosenCards;
 }
 
-- (BOOL)resetGameWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck;
+- (BOOL)resetGameWithCardCount:(NSUInteger)count
 {
     // since we drew the current cards off the deck, we need to put them back.
     for (Card *card in self.cards) {
         [card reset];
-        [deck addCard:card];
+        [self.deck addCard:card]; // we have to return the card we drew back to the deck
     }
     [self.cards removeAllObjects];
     
-    BOOL ret = [self initGameWithCardCount:count usingDeck:deck];
+    BOOL ret = [self dealNewGameWithCardCount:count usingDeck:self.deck]; // reinitialize
 
     if (YES == ret) {
         // set totalScore to zero

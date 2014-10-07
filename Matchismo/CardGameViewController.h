@@ -22,6 +22,4 @@
 // These are game settings, unique to the subclass that also creates the deck
 - (int)requiredCardsToMatch; // returns 0 by default, which breaks things - override for use
 
-- (void)updateUIButtons;
-
 @end
