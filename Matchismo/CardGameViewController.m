@@ -8,11 +8,14 @@
 
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
+#import "CardRenderingHelper.h"
 
 @interface CardGameViewController ()
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) Deck *deck;
 @property (strong, nonatomic, readwrite) CardMatchingGame *game;
+
+@property (strong, nonatomic) CardRenderingHelper *cardRenderingHelper;
 
 // outlets
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
@@ -39,6 +42,17 @@
 }
 
 - (Deck *)createDeck
+{
+    return nil; // This is now an abstract class
+}
+
+- (CardRenderingHelper *)cardRenderingHelper
+{
+    if (!_cardRenderingHelper) _cardRenderingHelper = [self createCardRenderingHelper];
+    return _cardRenderingHelper;
+}
+
+- (CardRenderingHelper *)createCardRenderingHelper
 {
     return nil; // This is now an abstract class
 }
@@ -76,14 +90,6 @@
 
 #pragma mark - UI Update and Helpers
 
-- (NSAttributedString *)attributedStringFromCards:(NSArray *)cards
-{
-    NSMutableString *cardsDrawnString = [[NSMutableString alloc] init];
-    for (Card* card in cards) {
-        [cardsDrawnString appendFormat:@"%@ ", card.contents];
-    }
-    return [[NSAttributedString alloc] initWithString:cardsDrawnString];
-}
 
 - (void)updateUIStatusLabel
 {
@@ -96,7 +102,7 @@
         case CardChosen:
         case CardUnchosen:
         {
-            self.playStatusLabel.attributedText = [self attributedStringFromCards:self.game.curChosenCards];
+            self.playStatusLabel.attributedText = [self.cardRenderingHelper attributedStringFromCards:self.game.curChosenCards whenFaceUpOnly:YES];
             break;
         }
             
@@ -104,7 +110,7 @@
         {
             // Builds the string
             NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
-            [aLabelString appendAttributedString:[self attributedStringFromCards:self.game.lastChosenCards]];
+            [aLabelString appendAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game getLastMatchedCards] whenFaceUpOnly:NO]];
             NSString *endText = [NSString stringWithFormat:@" for %ld points.", (long)self.game.lastScore];
             [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:endText]];
             
@@ -114,7 +120,7 @@
         
         case ScoredNoMatch:
         {
-            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithAttributedString:[self attributedStringFromCards:self.game.lastChosenCards]];
+            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game getLastMatchedCards] whenFaceUpOnly:NO]];
 
             [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %ld point penalty!", (long)self.game.lastScore]]];
             self.playStatusLabel.attributedText = aLabelString;
@@ -139,7 +145,13 @@
     for (UIButton *cardButton in self.cardButtons) {
         NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card* card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setTitle:[self titleForCard:card] forState:UIControlStateNormal];
+        
+        NSString *test =[self.cardRenderingHelper attributedStringFromCards:[NSArray arrayWithObject:card] whenFaceUpOnly:YES].string;
+        NSLog(@">%@<", test);
+        
+        [cardButton setAttributedTitle:[self.cardRenderingHelper attributedStringFromCards:[NSArray arrayWithObject:card] whenFaceUpOnly:YES]
+                              forState:UIControlStateNormal];
+        
         [cardButton setBackgroundImage:[self backgroundImageForCard:card]
                               forState:UIControlStateNormal];
         cardButton.enabled = !card.isOutOfPlay;
@@ -153,11 +165,6 @@
     [self updateUIScoreLabel];
     
     [self updateUIButtons];
-}
-
-- (NSString *)titleForCard:(Card *)card
-{
-    return card.isFaceUp ? card.contents : @"";
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card

@@ -39,8 +39,8 @@
 
 @property (nonatomic, readonly) NSInteger totalScore;
 @property (nonatomic) NSInteger lastScore;
-@property (nonatomic, readonly) NSArray *lastChosenCards; // of Card, for a given round
-@property (nonatomic, readonly) NSArray *curChosenCards; // of Card, for the current selections
+@property (nonatomic, copy) NSArray *lastChosenCards; // of Card, for a given round
+@property (nonatomic, copy) NSArray *curChosenCards; // of Card, for the current selections
 
 
 @end

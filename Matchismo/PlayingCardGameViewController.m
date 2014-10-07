@@ -8,6 +8,7 @@
 
 #import "PlayingCardGameViewController.h"
 #import "PlayingCardDeck.h"
+#import "PlayingCardRenderingHelper.h"
 
 @implementation PlayingCardGameViewController
 
@@ -15,6 +16,12 @@
 {
     return [[PlayingCardDeck alloc] init];
 }
+
+- (CardRenderingHelper *)createCardRenderingHelper
+{
+    return [[PlayingCardRenderingHelper alloc] init];
+}
+
 
 const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
 - (int)requiredCardsToMatch

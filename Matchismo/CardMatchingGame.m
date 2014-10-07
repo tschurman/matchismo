@@ -7,6 +7,7 @@
 //
 
 #import "CardMatchingGame.h"
+#import "CardMatchAttempt.h"
 
 static const int DEFAULT_REQUIRED_MATCHES = 2;
 
@@ -18,6 +19,9 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
 @property (nonatomic, readwrite) NSInteger totalScore;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
 @property (nonatomic, weak) Deck* deck;
+
+@property (nonatomic, strong) NSMutableArray *cardMatchAttempts; // of CardMatchAttempt
+
 @end
 
 @implementation CardMatchingGame
@@ -44,26 +48,30 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
 {
     BOOL ret = YES;
     
-    if (self) {
-        // iterate through the count of cards draw a random card from the deck, then
-        // addObject to our cards array each time
-        for (int i=0; i<count; ++i) {
-            Card *card = [deck drawRandomCard];
-            if (card) {
-                // add
-                [self.cards addObject:card];
-            } else {
-                ret = NO;
-                break;
-            }
+    // iterate through the count of cards draw a random card from the deck, then
+    // addObject to our cards array each time
+    for (int i=0; i<count; ++i) {
+        Card *card = [deck drawRandomCard];
+        if (card) {
+            // add
+            [self.cards addObject:card];
+        } else {
+            ret = NO;
+            break;
         }
-        self.gameStatus = NewDeal;
-        if (!_curChosenCards) _curChosenCards = [[NSMutableArray alloc] init];
-        if (!_lastChosenCards) _lastChosenCards = [[NSMutableArray alloc] init];
-        
-    } else {
-        ret = NO;
     }
+    self.gameStatus = NewDeal;
+    if (!_curChosenCards) _curChosenCards = [[NSMutableArray alloc] init];
+    [_curChosenCards removeAllObjects];
+    if (!_lastChosenCards) _lastChosenCards = [[NSMutableArray alloc] init];
+    [_lastChosenCards removeAllObjects];
+    
+    // set totalScore to zero
+    self.totalScore = 0;
+    self.gameStatus = NewDeal;
+ 
+    [self.cardMatchAttempts removeAllObjects];
+
     return ret;
 }
 
@@ -86,6 +94,12 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
     return _lastChosenCards;
 }
 
+- (NSMutableArray *)cardMatchAttempts
+{
+    if (!_cardMatchAttempts) _cardMatchAttempts = [[NSMutableArray alloc] init];
+    return _cardMatchAttempts;
+}
+
 - (BOOL)resetGameWithCardCount:(NSUInteger)count
 {
     // since we drew the current cards off the deck, we need to put them back.
@@ -96,13 +110,6 @@ static const int DEFAULT_REQUIRED_MATCHES = 2;
     [self.cards removeAllObjects];
     
     BOOL ret = [self dealNewGameWithCardCount:count usingDeck:self.deck]; // reinitialize
-
-    if (YES == ret) {
-        // set totalScore to zero
-        self.totalScore = 0;
-        [_curChosenCards removeAllObjects];
-        self.gameStatus = NewDeal;
-    }
     
     return ret;
 }
@@ -130,6 +137,9 @@ static const int COST_TO_CHOOSE = 1;
         }
         self.lastScore = matchScore * MATCH_BONUS;
         self.totalScore += self.lastScore;
+        
+        [self.cardMatchAttempts addObject:[[CardMatchAttempt alloc] initWithCards:self.curChosenCards withScore:self.lastScore withMatch:YES]];
+        
     } else {
         // set all but the very last chosenCard.chosen to NO, and turn them back face-down
         for (Card* chosenCard in self.curChosenCards) {
@@ -141,6 +151,8 @@ static const int COST_TO_CHOOSE = 1;
         self.lastScore = MISMATCH_PENALTY;
 
         self.totalScore -= self.lastScore;
+
+        [self.cardMatchAttempts addObject:[[CardMatchAttempt alloc] initWithCards:self.curChosenCards withScore:(-self.lastScore) withMatch:NO]];
     }
     
     return (matchScore != 0);
@@ -196,17 +208,9 @@ static const int COST_TO_CHOOSE = 1;
 
 - (NSArray *) getLastMatchedCards;
 {
-    Card* highestScoringCard;
-    // iterate through lastChosenCards, find the highest scoring card and put that
-    // one, plus its matches
-    for (Card* card in self.lastChosenCards) {
-        if (!highestScoringCard) highestScoringCard = card;
-        else if (card.score > highestScoringCard.score) highestScoringCard = card;
-    }
-    NSMutableArray *lastMatchedCards = [NSMutableArray arrayWithArray:highestScoringCard.lastCardsMatched];
-    [lastMatchedCards addObject:highestScoringCard]; // plus the card itself
+    CardMatchAttempt * lastAttempt = [self.cardMatchAttempts lastObject];
     
-    return lastMatchedCards;
+    return lastAttempt.cards;
 }
 
 
