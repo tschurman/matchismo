@@ -9,17 +9,16 @@
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
 #import "CardRenderingHelper.h"
-#import "CardGameHistoryViewController.h"
 
 @interface CardGameViewController ()
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) Deck *deck;
 @property (strong, nonatomic, readwrite) CardMatchingGame *game;
+@property (strong, nonatomic) NSMutableArray *cardButtons;
 
 @property (strong, nonatomic) CardRenderingHelper *cardRenderingHelper;
 
 // outlets
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playStatusLabel;
 
@@ -68,20 +67,6 @@
 - (void)viewWillLayoutSubviews
 {
     [self updateUI];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // The identifier itself is less relevent here, since this base class is handling multiple
-    // views and their segues to a card game history view -- just check the kind of class on the
-    // destination view controller
-//    if ([segue.identifier isEqualToString:@"Match History"]) {
-        if ([segue.destinationViewController isKindOfClass:[CardGameHistoryViewController class]]) {
-            CardGameHistoryViewController *cardGameHistoryViewController = (CardGameHistoryViewController *)segue.destinationViewController;
-            cardGameHistoryViewController.cardRenderingHelper = self.cardRenderingHelper;
-            cardGameHistoryViewController.cardGameMatches = self.game.cardMatchAttemptsHistory; // todo: verify this .notation is legit at runtime
-        }
-//    }
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender

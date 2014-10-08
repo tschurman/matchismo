@@ -16,33 +16,33 @@
     // determine how they should be rendered.
     
     NS_ENUM(char, SetCardShape) {
-        SetCardShapeSquiggle, // objective C guarantees this starts at 0
-        SetCardShapeDiamond,
-        SetCardShapeOval,
+        SetCardShape1, // objective C guarantees this starts at 0
+        SetCardShape2,
+        SetCardShape3,
         
         SetCardShapeEnd // only for iteration, there are no cards with this value
     };
     
     NS_ENUM(char, SetCardColor) { // of the symbol
-        SetCardColorRed, // Objective C guarantees this starts at 0
-        SetCardColorGreen,
-        SetCardColorPurple,
+        SetCardColor1, // Objective C guarantees this starts at 0
+        SetCardColor2,
+        SetCardColor3,
         
         SetCardColorEnd // only for interation, is listed last, there are no cards with this value
     };
 
     NS_ENUM(char, SetCardShade) { // of the colored symbol
-        SetCardShadeSolid,  // Objective C guarnatees this starts at 0
-        SetCardShadeShaded, // Shaded between solid and no shading at all
-        SetCardShadeNone,   // Just an outline
+        SetCardShade1,  // Objective C guarnatees this starts at 0
+        SetCardShade2, // Shaded between solid and no shading at all
+        SetCardShade3,   // Just an outline
         
         SetCardShadeEnd     // only for iteration, is listed last, there are no cards with this value
     };
     
     NS_ENUM(char, SetCardNumber) { // o the colored shaded symbol
-        SetCardNumberOne,
-        SetCardNumberTwo,
-        SetCardNumberThree,
+        SetCardNumber1,
+        SetCardNumber2,
+        SetCardNumber3,
         
         SetCardNumberEnd // only for iteration, is listed last, there are no cards with this value
     };

@@ -51,15 +51,15 @@
     NSMutableDictionary *attrs = [[NSMutableDictionary alloc] init];
     // Color the shapes
     switch (setCard.color) {
-        case SetCardColorRed:
+        case SetCardColor1:
             [attrs setObject:[UIColor redColor] forKey:NSForegroundColorAttributeName];
             [attrs setObject:[UIColor redColor] forKey:NSStrokeColorAttributeName];
             break;
-        case SetCardColorGreen:
+        case SetCardColor2:
             [attrs setObject:[UIColor greenColor] forKey:NSForegroundColorAttributeName];
             [attrs setObject:[UIColor greenColor] forKey:NSStrokeColorAttributeName];
             break;
-        case SetCardColorPurple:
+        case SetCardColor3:
             [attrs setObject:[UIColor purpleColor] forKey:NSForegroundColorAttributeName];
             [attrs setObject:[UIColor purpleColor] forKey:NSStrokeColorAttributeName];
             break;
@@ -74,17 +74,17 @@
     
     // Set outline/shading
     switch (setCard.shade) {
-        case SetCardShadeSolid:
+        case SetCardShade1:
             [attrs setObject:[[attrs objectForKey:NSForegroundColorAttributeName] colorWithAlphaComponent:1.0]
                       forKey:NSForegroundColorAttributeName];
             [attrs setObject:@0 forKey:NSStrokeWidthAttributeName];
             break;
-        case SetCardShadeShaded:
+        case SetCardShade2:
             [attrs setObject:[[attrs objectForKey:NSForegroundColorAttributeName] colorWithAlphaComponent:0.2]
                       forKey:NSForegroundColorAttributeName];
             [attrs setObject:@0 forKey:NSStrokeWidthAttributeName];
             break;
-        case SetCardShadeNone:
+        case SetCardShade3:
             // operate on the color at key NSForegroundColorAttributeName using UIColor selector: colorWithAlphaComponent:0.n -- see what happens...lol
             [attrs setObject:[[attrs objectForKey:NSForegroundColorAttributeName] colorWithAlphaComponent:0.0]
                       forKey:NSForegroundColorAttributeName];
