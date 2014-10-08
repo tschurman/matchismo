@@ -9,6 +9,7 @@
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
 #import "CardRenderingHelper.h"
+#import "CardGameHistoryViewController.h"
 
 @interface CardGameViewController ()
 @property (nonatomic) int flipCount;
@@ -69,6 +70,19 @@
     [self updateUI];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // The identifier itself is less relevent here, since this base class is handling multiple
+    // views and their segues to a card game history view -- just check the kind of class on the
+    // destination view controller
+//    if ([segue.identifier isEqualToString:@"Match History"]) {
+        if ([segue.destinationViewController isKindOfClass:[CardGameHistoryViewController class]]) {
+            CardGameHistoryViewController *cardGameHistoryViewController = (CardGameHistoryViewController *)segue.destinationViewController;
+            cardGameHistoryViewController.cardRenderingHelper = self.cardRenderingHelper;
+            cardGameHistoryViewController.cardGameMatches = self.game.cardMatchAttemptsHistory; // todo: verify this .notation is legit at runtime
+        }
+//    }
+}
 
 - (IBAction)touchCardButton:(UIButton *)sender
 {
@@ -84,7 +98,7 @@
 - (IBAction)touchResetButton:(UIButton *)sender {
     // reset the game and the UI
     self.flipCount = 0;
-    [self.game resetGameWithCardCount:self.cardButtons.count];
+    [self.game dealNewGameWithCardCount:self.cardButtons.count];
     [self updateUI];
 }
 
@@ -110,8 +124,8 @@
         {
             // Builds the string
             NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
-            [aLabelString appendAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game getLastMatchedCards] whenFaceUpOnly:NO]];
-            NSString *endText = [NSString stringWithFormat:@" for %ld points.", (long)self.game.lastScore];
+            [aLabelString appendAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game lastMatchedCardsHistory] whenFaceUpOnly:NO]];
+            NSString *endText = [NSString stringWithFormat:@" for %ld points.", (long)self.game.lastScoreHistory];
             [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:endText]];
             
             self.playStatusLabel.attributedText = aLabelString;
@@ -120,9 +134,9 @@
         
         case ScoredNoMatch:
         {
-            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game getLastMatchedCards] whenFaceUpOnly:NO]];
+            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game lastMatchedCardsHistory] whenFaceUpOnly:NO]];
 
-            [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %ld point penalty!", (long)self.game.lastScore]]];
+            [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %ld point penalty!", (long)self.game.lastScoreHistory]]];
             self.playStatusLabel.attributedText = aLabelString;
             break;
         }
@@ -145,9 +159,6 @@
     for (UIButton *cardButton in self.cardButtons) {
         NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card* card = [self.game cardAtIndex:cardButtonIndex];
-        
-        NSString *test =[self.cardRenderingHelper attributedStringFromCards:[NSArray arrayWithObject:card] whenFaceUpOnly:YES].string;
-        NSLog(@">%@<", test);
         
         [cardButton setAttributedTitle:[self.cardRenderingHelper attributedStringFromCards:[NSArray arrayWithObject:card] whenFaceUpOnly:YES]
                               forState:UIControlStateNormal];

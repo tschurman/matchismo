@@ -16,24 +16,16 @@
 // for whatever purposes subclassed by design.
 @property (strong, nonatomic) NSString *contents;
 
-// A card can be dealt face-up or face-down; this matters in a given context
-@property (nonatomic, getter=isFaceUp) BOOL faceUp;
+@property (nonatomic, getter=isFaceUp) BOOL faceUp; // A card can be dealt face-up or face-down; this matters in a given context
+@property (nonatomic, getter = isChosen) BOOL chosen; // A card can be "chosen" as a state in some context
+@property (nonatomic, getter = isMatched) BOOL matched; // a card can be "matched" as a state in some context with other cards, or perhaps non-cards
+@property (nonatomic, weak) NSMutableArray *lastCardsMatched; // A card keeps a weak link to other cards to which it may be matched, may be nil if no matches
+@property (nonatomic, getter = isOutOfPlay) BOOL outOfPlay; // a card can be in-play or "out of play" in some context
 
-// A card can be "chosen" as a state in some context
-@property (nonatomic, getter = isChosen) BOOL chosen;
+@property (nonatomic) int score; // A card also has a score, if it has been matched
 
-// a card can be "matched" as a state in some context
-// with other cards, or perhaps non-cards
-@property (nonatomic, getter = isMatched) BOOL matched;
-// A card keeps a weak link to other cards to which it may be matched, may be nil if no matches
-@property (nonatomic, weak) NSMutableArray *lastCardsMatched;
 
-// a card can be in-play or "out of play" in some context
-@property (nonatomic, getter = isOutOfPlay) BOOL outOfPlay;
-
-// A card also has a score
-@property (nonatomic) int score;
-
+// reset the card properties to all zero, NO and nil where appropriate
 - (void)reset;
 
 // This returns a score for matching this (self) card to the cards in the given array

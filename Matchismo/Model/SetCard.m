@@ -8,8 +8,6 @@
 
 #import "SetCard.h"
 
-static int referenceCount;
-
 @interface SetCard()
 
 @property (nonatomic, readwrite) enum SetCardShape shape;
@@ -43,8 +41,6 @@ static int referenceCount;
                            [NSNumber numberWithInt:self.shade],
                            [NSNumber numberWithInt:self.number]];
     
-        referenceCount++;
-        NSLog(@"Creating SetCard: %d: ShapeColorShadeNumber: %d%d%d%d", referenceCount, self.shape, self.color, self.shade, self.number);
     }
 
     return self;
