@@ -7,8 +7,13 @@
 //
 
 #import "CardGameViewController.h"
+
 #import "CardMatchingGame.h"
 #import "CardRenderingHelper.h"
+#import "CardGridView.h"
+
+// TESTING ONLY
+#import "PlayingCardView.h"
 
 @interface CardGameViewController ()
 @property (nonatomic) int flipCount;
@@ -21,6 +26,7 @@
 // outlets
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playStatusLabel;
+@property (weak, nonatomic) IBOutlet CardGridView *cardGridView;
 
 @end
 
@@ -64,9 +70,52 @@
 
 #pragma mark - View Notification Handlers nad IBActions
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    // create the PlayingCardView objects here. This is called only once, and we want to create and init all of our views
+    // Note that this is different than setting up the display of all the views, which is drawing and drawing is later.
+    
+    // tell cardGridView to create the grid of cards
+    [self.cardGridView createGridWithCount:1]; // TODO: ask the game how many cards are on the table
+
+    // TESTING ONLY
+    for (PlayingCardView* cardView in self.cardGridView.cardViewArray) {
+        cardView.rank = 13;
+        cardView.suit = @"♥️";
+        cardView.faceUp = YES;
+    }
+    
+    // TODO: We need to setup touches as well
+
+}
+
 - (void)viewWillLayoutSubviews
 {
     [self updateUI];
+}
+
+- (IBAction)testCardSwipe:(UISwipeGestureRecognizer *)sender {
+    // for testing - march through the face cards, then the pips
+    // suits by ♥️♦️♣️♠️
+    for (PlayingCardView *cardView in self.cardGridView.cardViewArray) {
+        if (cardView.rank == 1) {
+            if ([cardView.suit isEqualToString:@"♥️"]) {
+                cardView.suit = @"♦️";
+            } else if ([cardView.suit isEqualToString:@"♦️"]) {
+                cardView.suit = @"♣️";
+            } else if ([cardView.suit isEqualToString:@"♣️"]) {
+                cardView.suit = @"♠️";
+            } else {
+                cardView.suit = @"♥️";
+                cardView.faceUp = !cardView.faceUp;
+            }
+            cardView.rank = 13;
+        } else {
+            cardView.rank--;
+        }
+    }
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender

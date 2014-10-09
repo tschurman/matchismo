@@ -35,15 +35,28 @@
                                     <action selector="touchResetButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="brQ-BM-Dfl"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzA-9x-8Ai" customClass="PlayingCardGridView">
+                                <rect key="frame" x="20" y="72" width="280" height="264"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="o3X-7o-LKm" appends="YES" id="omQ-lc-vDD"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.50196081399917603" blue="0.25098040699958801" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="Match" id="E0J-M3-cDf"/>
                     <connections>
+                        <outlet property="cardGridView" destination="fzA-9x-8Ai" id="e6W-lD-Xso"/>
                         <outlet property="scoreLabel" destination="swa-Lw-dwi" id="MOl-tP-UWe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="o3X-7o-LKm">
+                    <connections>
+                        <action selector="testCardSwipe:" destination="vXZ-lx-hvc" id="6sl-DT-h64"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="323" y="-285"/>
         </scene>
@@ -78,6 +91,10 @@
                                     <action selector="touchResetButton:" destination="RON-nq-PZx" eventType="touchUpInside" id="bix-Ex-7Xl"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SmR-A1-J5g">
+                                <rect key="frame" x="20" y="72" width="280" height="264"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.68965631175814035" green="0.8332760448301112" blue="0.97945600748062134" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
