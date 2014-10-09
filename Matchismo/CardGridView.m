@@ -42,7 +42,7 @@ const NSUInteger CARD_GRID_IDEAL_ASPECT_HEIGHT = 6;
     // set the grid parameters
     self.grid.size = self.bounds.size;
     self.grid.cellAspectRatio = (CGFloat)CARD_GRID_IDEAL_ASPECT_WIDTH / (CGFloat)CARD_GRID_IDEAL_ASPECT_HEIGHT;
-    self.grid.minimumNumberOfCells = count; // TODO: Remove - TEst only code
+    self.grid.minimumNumberOfCells = count;
     
     self.grid.maxColumns = [self idealMaxColumnsFromNumberOfCells:self.grid.minimumNumberOfCells];
     
