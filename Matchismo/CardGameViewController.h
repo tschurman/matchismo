@@ -10,7 +10,8 @@
 #import "Deck.h"
 
 @class CardMatchingGame;
-@class CardRenderingHelper;
+@class CardView;
+@class Card;
 
 @interface CardGameViewController : UIViewController
 
@@ -20,8 +21,8 @@
 // Abstract class that subclasses must override. Will return nil otherwise.
 - (Deck *)createDeck;
 
-// Anstract class that sublcasses must override. Will return nil here.
-- (CardRenderingHelper *)createCardRenderingHelper;
+// override for tranlation of playing card model to the card views
+- (void)updateUICardView:(CardView *)cardView withCard:(Card *)card;
 
 // These are game settings, unique to the subclass that also creates the deck
 - (int)requiredCardsToMatch; // returns 0 by default, which breaks things - override for use

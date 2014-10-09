@@ -188,10 +188,14 @@ static const int COST_TO_CHOOSE = 1;
         
         if ([self.curChosenCards count] == self.requiredMatches){
             BOOL scoredMatches = [self scoreChosenCards];
+            for (Card* chosenCard in _curChosenCards) {
+                chosenCard.chosen = NO; // not any more
+            }
             [_curChosenCards removeAllObjects]; // these cards are now out of play
             if (!scoredMatches) {
                 // no match, but keep the last one chosen to make the game more interesting, add it back to our chosenCards
                 [_curChosenCards addObject:card];
+                card.chosen = YES; // just this one we added back
                 self.gameStatus = ScoredNoMatch;
             } else {
                 self.gameStatus = ScoredMatch;

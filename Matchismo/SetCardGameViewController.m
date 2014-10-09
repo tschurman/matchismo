@@ -10,7 +10,6 @@
 #import "SetCardDeck.h"
 #import "SetCard.h"
 #import "CardMatchingGame.h"
-#import "SetCardRenderingHelper.h"
 
 @interface SetCardGameViewController()
 
@@ -27,11 +26,6 @@
 - (Deck *)createDeck
 {
     return [[SetCardDeck alloc] init];
-}
-
-- (CardRenderingHelper *)createCardRenderingHelper
-{
-    return [[SetCardRenderingHelper alloc] init];
 }
 
 const int SET_GAME_REQUIRED_MATCHES_DEFAULT = 3;

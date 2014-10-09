@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7004ECC619E45FB9009AABBA /* CardRenderingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7004ECC519E45FB9009AABBA /* CardRenderingHelper.m */; };
-		7004ECC919E46061009AABBA /* PlayingCardRenderingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7004ECC819E46061009AABBA /* PlayingCardRenderingHelper.m */; };
-		7004ECCC19E4606F009AABBA /* SetCardRenderingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7004ECCB19E4606F009AABBA /* SetCardRenderingHelper.m */; };
 		7004ECCF19E46723009AABBA /* CardMatchAttempt.m in Sources */ = {isa = PBXBuildFile; fileRef = 7004ECCE19E46723009AABBA /* CardMatchAttempt.m */; };
 		7005250C19C8A9670036647A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7005250B19C8A9670036647A /* Foundation.framework */; };
 		7005250E19C8A9670036647A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7005250D19C8A9670036647A /* CoreGraphics.framework */; };
@@ -52,12 +49,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7004ECC419E45FB9009AABBA /* CardRenderingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardRenderingHelper.h; sourceTree = "<group>"; };
-		7004ECC519E45FB9009AABBA /* CardRenderingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardRenderingHelper.m; sourceTree = "<group>"; };
-		7004ECC719E46061009AABBA /* PlayingCardRenderingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingCardRenderingHelper.h; sourceTree = "<group>"; };
-		7004ECC819E46061009AABBA /* PlayingCardRenderingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingCardRenderingHelper.m; sourceTree = "<group>"; };
-		7004ECCA19E4606F009AABBA /* SetCardRenderingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetCardRenderingHelper.h; sourceTree = "<group>"; };
-		7004ECCB19E4606F009AABBA /* SetCardRenderingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetCardRenderingHelper.m; sourceTree = "<group>"; };
 		7004ECCD19E46723009AABBA /* CardMatchAttempt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardMatchAttempt.h; path = Model/CardMatchAttempt.h; sourceTree = "<group>"; };
 		7004ECCE19E46723009AABBA /* CardMatchAttempt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CardMatchAttempt.m; path = Model/CardMatchAttempt.m; sourceTree = "<group>"; };
 		7005250819C8A9670036647A /* Matchismo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Matchismo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,12 +158,6 @@
 			isa = PBXGroup;
 			children = (
 				7005251D19C8A9670036647A /* Main.storyboard */,
-				7004ECC419E45FB9009AABBA /* CardRenderingHelper.h */,
-				7004ECC519E45FB9009AABBA /* CardRenderingHelper.m */,
-				7004ECC719E46061009AABBA /* PlayingCardRenderingHelper.h */,
-				7004ECC819E46061009AABBA /* PlayingCardRenderingHelper.m */,
-				7004ECCA19E4606F009AABBA /* SetCardRenderingHelper.h */,
-				7004ECCB19E4606F009AABBA /* SetCardRenderingHelper.m */,
 				704CAD4219E5C01C009D6BF7 /* Grid.h */,
 				704CAD4319E5C01C009D6BF7 /* Grid.m */,
 				704CAD4819E5F53E009D6BF7 /* CardGridView.h */,
@@ -381,17 +366,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7004ECC619E45FB9009AABBA /* CardRenderingHelper.m in Sources */,
 				7005251C19C8A9670036647A /* CardGameAppDelegate.m in Sources */,
 				704CAD4D19E5FD11009D6BF7 /* CardView.m in Sources */,
-				7004ECC919E46061009AABBA /* PlayingCardRenderingHelper.m in Sources */,
 				7005252219C8A9670036647A /* CardGameViewController.m in Sources */,
 				70F05D4F19E0AB3B0069BA2E /* SetCard.m in Sources */,
 				704CAD5019E5FD48009D6BF7 /* PlayingCardGridView.m in Sources */,
 				7005251819C8A9670036647A /* main.m in Sources */,
 				704CAD4419E5C01C009D6BF7 /* Grid.m in Sources */,
 				7005254619C8B7980036647A /* PlayingCard.m in Sources */,
-				7004ECCC19E4606F009AABBA /* SetCardRenderingHelper.m in Sources */,
 				7005254F19C8EFB70036647A /* CardMatchingGame.m in Sources */,
 				7005254C19C8BE8E0036647A /* PlayingCardDeck.m in Sources */,
 				7004ECCF19E46723009AABBA /* CardMatchAttempt.m in Sources */,

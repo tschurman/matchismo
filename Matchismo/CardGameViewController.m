@@ -9,7 +9,6 @@
 #import "CardGameViewController.h"
 
 #import "CardMatchingGame.h"
-#import "CardRenderingHelper.h"
 #import "CardGridView.h"
 
 // TESTING ONLY
@@ -19,9 +18,6 @@
 @property (nonatomic) int flipCount;
 @property (strong, nonatomic) Deck *deck;
 @property (strong, nonatomic, readwrite) CardMatchingGame *game;
-@property (strong, nonatomic) NSMutableArray *cardButtons;
-
-@property (strong, nonatomic) CardRenderingHelper *cardRenderingHelper;
 
 // outlets
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
@@ -36,7 +32,7 @@
 
 - (CardMatchingGame *)game
 {
-    if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
+    if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:[self cardsToDeal]
                                                           usingDeck:self.deck];
     return _game;
 }
@@ -48,17 +44,6 @@
 }
 
 - (Deck *)createDeck
-{
-    return nil; // This is now an abstract class
-}
-
-- (CardRenderingHelper *)cardRenderingHelper
-{
-    if (!_cardRenderingHelper) _cardRenderingHelper = [self createCardRenderingHelper];
-    return _cardRenderingHelper;
-}
-
-- (CardRenderingHelper *)createCardRenderingHelper
 {
     return nil; // This is now an abstract class
 }
@@ -87,108 +72,38 @@
     // tell cardGridView to create the grid of cards
     [self.cardGridView createGridWithCount:[self cardsToDeal]];
     
-    // TODO: for the dealt cards, draw a random card and set the view accordingly
-
-    // TESTING ONLY
-    for (PlayingCardView* cardView in self.cardGridView.cardViewArray) {
-        cardView.rank = 13;
-        cardView.suit = @"♥️";
-        cardView.faceUp = YES;
+    // for each button
+    for (CardView *cardView in self.cardGridView.cardViewArray) {
+        // ensure the cardView is enabled
+        cardView.enabled = YES;
+        [cardView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchCardButton:)]];
     }
     
-    // TODO: We need to setup touches as well
-
-}
-
-- (void)viewWillLayoutSubviews
-{
     [self updateUI];
+    
 }
 
-- (IBAction)testCardSwipe:(UISwipeGestureRecognizer *)sender {
-    // for testing - march through the face cards, then the pips
-    // suits by ♥️♦️♣️♠️
-    for (PlayingCardView *cardView in self.cardGridView.cardViewArray) {
-        if (cardView.rank == 1) {
-            if ([cardView.suit isEqualToString:@"♥️"]) {
-                cardView.suit = @"♦️";
-            } else if ([cardView.suit isEqualToString:@"♦️"]) {
-                cardView.suit = @"♣️";
-            } else if ([cardView.suit isEqualToString:@"♣️"]) {
-                cardView.suit = @"♠️";
-            } else {
-                cardView.suit = @"♥️";
-                cardView.faceUp = !cardView.faceUp;
-            }
-            cardView.rank = 13;
-        } else {
-            cardView.rank--;
-        }
-    }
-}
 
-- (IBAction)touchCardButton:(UIButton *)sender
+- (void)touchCardButton:(UITapGestureRecognizer *)gesture
 {
     if (0 == self.flipCount) {
         self.game.requiredMatches = [self requiredCardsToMatch];
     }
     
-    NSUInteger chooseButtonIndex = [self.cardButtons indexOfObject:sender];
+    NSUInteger chooseButtonIndex = [self.cardGridView.cardViewArray indexOfObject:gesture.view];
     [self.game chooseCardAtIndex:chooseButtonIndex];
     [self updateUI];
     
 }
+
 - (IBAction)touchResetButton:(UIButton *)sender {
     // reset the game and the UI
     self.flipCount = 0;
-    [self.game dealNewGameWithCardCount:self.cardButtons.count];
+    [self.game dealNewGameWithCardCount:[self cardsToDeal]];
     [self updateUI];
 }
 
 #pragma mark - UI Update and Helpers
-
-
-- (void)updateUIStatusLabel
-{
-//    dd a text label somewhere which desribes the results of the last consideration by the CardMatchingGame of a card choice by the user. Examples: “Matched J♥ J♠ for 4 points.” or “6♦ J♣ don’t match! 2 point penalty!” or “8♦” if only one card is chosen or even blank if no cards are chosen.
-//
-    switch (self.game.gameStatus) {
-        case NewDeal: self.playStatusLabel.text = @"";
-            break;
-            
-        case CardChosen:
-        case CardUnchosen:
-        {
-            self.playStatusLabel.attributedText = [self.cardRenderingHelper attributedStringFromCards:self.game.curChosenCards whenFaceUpOnly:YES];
-            break;
-        }
-            
-        case ScoredMatch:
-        {
-            // Builds the string
-            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithString:@"Matched "];
-            [aLabelString appendAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game lastMatchedCardsHistory] whenFaceUpOnly:NO]];
-            NSString *endText = [NSString stringWithFormat:@" for %ld points.", (long)self.game.lastScoreHistory];
-            [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:endText]];
-            
-            self.playStatusLabel.attributedText = aLabelString;
-            break;
-        }
-        
-        case ScoredNoMatch:
-        {
-            NSMutableAttributedString *aLabelString = [[NSMutableAttributedString alloc] initWithAttributedString:[self.cardRenderingHelper attributedStringFromCards:[self.game lastMatchedCardsHistory] whenFaceUpOnly:NO]];
-
-            [aLabelString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" don't match! %ld point penalty!", (long)self.game.lastScoreHistory]]];
-            self.playStatusLabel.attributedText = aLabelString;
-            break;
-        }
-        
-        default: self.playStatusLabel.text = @"???";
-            break;
-    }
-    
-}
 
 - (void)updateUIScoreLabel
 {
@@ -196,34 +111,48 @@
                             (long)self.game.totalScore];
 }
 
+- (void)updateUICardView:(CardView *)cardView withCard:(Card *)card
+{
+    // is there a better way to tie data to a view -- this seems like an extra layer of abstraction
+    // that could be done in a different way -- say notifications?
+    // This requires that our CardGameViewControllers know how to translate to the playing cards -- not the worst offense
+    if (cardView.enabled && card.isOutOfPlay) {
+        // Disable the UITapGestureNotification for this card -- it's out of play
+        for (UIGestureRecognizer *gesture in cardView.gestureRecognizers) {
+            gesture.enabled = NO;
+        }
+    } else if (!cardView.enabled && !card.isOutOfPlay) {
+        // Card is coming into play - nsure we ahve a UITabGestureNotification for this cardView
+        for (UIGestureRecognizer *gesture in cardView.gestureRecognizers) {
+            gesture.enabled = YES;
+        }
+    }
+    // else - nothing to do but ensure state is set propertly
+    cardView.enabled = !card.isOutOfPlay;
+    
+    cardView.faceUp = card.faceUp;
+
+    cardView.selected = card.chosen;
+    
+    [cardView setNeedsDisplay];
+}
+
 - (void)updateUIButtons
 {
     // now update each button
-    for (UIButton *cardButton in self.cardButtons) {
-        NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
+    for (CardView * cardView in self.cardGridView.cardViewArray) {
+        NSUInteger cardButtonIndex = [self.cardGridView.cardViewArray indexOfObject:cardView];
         Card* card = [self.game cardAtIndex:cardButtonIndex];
         
-        [cardButton setAttributedTitle:[self.cardRenderingHelper attributedStringFromCards:[NSArray arrayWithObject:card] whenFaceUpOnly:YES]
-                              forState:UIControlStateNormal];
-        
-        [cardButton setBackgroundImage:[self backgroundImageForCard:card]
-                              forState:UIControlStateNormal];
-        cardButton.enabled = !card.isOutOfPlay;
+        [self updateUICardView:cardView withCard:card];
     }
 }
 
 - (void)updateUI
 {
-    [self updateUIStatusLabel];
-    
     [self updateUIScoreLabel];
     
     [self updateUIButtons];
-}
-
-- (UIImage *)backgroundImageForCard:(Card *)card
-{
-    return [UIImage imageNamed:card.isFaceUp ? @"cardfront" : @"cardback"];
 }
 
 @end

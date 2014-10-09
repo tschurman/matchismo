@@ -18,19 +18,12 @@
 
 #pragma mark - Initialization
 
--(void)setup
-{
-    self.backgroundColor = nil; // same as clear
-    self.opaque = NO;
-    self.contentMode = UIViewContentModeRedraw;
-}
-
 // Override designated initializer
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self){
-        [self setup];
+
     }
     
     return self;
@@ -49,11 +42,6 @@
     [self setNeedsDisplay];
 }
 
-- (void)setFaceUp:(BOOL)faceUp
-{
-    _faceUp = faceUp;
-    [self setNeedsDisplay];
-}
 
 @synthesize faceCardScaleFactor = _faceCardScaleFactor;
 const float DEFAULT_FACE_CARD_SCALE_FACTOR = 0.85;
@@ -75,10 +63,9 @@ const float DEFAULT_FACE_CARD_SCALE_FACTOR = 0.85;
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    [super drawRect:rect];
+    [super drawRect:rect]; // background is drawn by super
     
     if (self.faceUp) {
-        [self drawCardBackground];
         
         [self drawCardCornerLabels];
         
@@ -89,28 +76,6 @@ const float DEFAULT_FACE_CARD_SCALE_FACTOR = 0.85;
         [[UIImage imageNamed:@"cardback"] drawInRect:self.bounds];
     }
     
-}
-
-// These numbers and the supporting methods are estimates, subject to visual inspection and adjustment accordingly
-const float CORNER_FONT_STANDARD_HEIGHT = 180.0;
-const float CORNER_RADIUS = 12.0;
-
-- (CGFloat)cornerScaleFactor { return self.bounds.size.height / CORNER_FONT_STANDARD_HEIGHT; }
-- (CGFloat)cornerRadius { return CORNER_RADIUS * [self cornerScaleFactor]; }
-- (CGFloat)cornerOffset { return [self cornerRadius] / 3.0; }
-
-- (void)drawCardBackground
-{
-    // Rounded corners on our white background card with a black line around
-    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self cornerRadius]];
-    [roundedRect addClip];
-    
-    [[UIColor whiteColor] setFill];
-    UIRectFill(self.bounds);
-    
-    [[UIColor blackColor] setStroke];
-    [roundedRect stroke];
-
 }
 
 - (NSString *)rankAsString
