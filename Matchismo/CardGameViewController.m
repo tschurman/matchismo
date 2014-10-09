@@ -68,6 +68,13 @@
     return 0; // this is not an abstract class
 }
 
+
+- (int)cardsToDeal
+{
+    return 1;
+}
+
+
 #pragma mark - View Notification Handlers nad IBActions
 
 - (void)viewDidLoad
@@ -78,7 +85,9 @@
     // Note that this is different than setting up the display of all the views, which is drawing and drawing is later.
     
     // tell cardGridView to create the grid of cards
-    [self.cardGridView createGridWithCount:1]; // TODO: ask the game how many cards are on the table
+    [self.cardGridView createGridWithCount:[self cardsToDeal]];
+    
+    // TODO: for the dealt cards, draw a random card and set the view accordingly
 
     // TESTING ONLY
     for (PlayingCardView* cardView in self.cardGridView.cardViewArray) {

@@ -25,5 +25,6 @@
 
 // These are game settings, unique to the subclass that also creates the deck
 - (int)requiredCardsToMatch; // returns 0 by default, which breaks things - override for use
+- (int)cardsToDeal; // probably based on the view, but we'll let the subclass tell us
 
 @end

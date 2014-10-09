@@ -18,7 +18,88 @@
 
 @implementation Grid
 
-- (void)validate
+
+// Tom Schurman: Maximize the size of the cells leveraging the ratio and desired count as set by user
+// for now, some of the code will be redundant. Refactor validation code away from calculation code
+- (void)validateOnMaxColumn
+{
+    if (self.resolved) return;    // already valid, nothing to do
+    if (self.unresolvable) return;  // already tried to validate and couldn't
+    
+    double overallWidth = ABS(self.size.width);
+    double overallHeight = ABS(self.size.height);
+    double aspectRatio = ABS(self.cellAspectRatio);
+    
+    if (!self.minimumNumberOfCells || !aspectRatio || !overallWidth || !overallHeight) {
+        self.unresolvable = YES;
+        return; // invalid inputs
+    }
+    
+    double minCellWidth = self.minCellWidth;
+    double minCellHeight = self.minCellHeight;
+    double maxCellWidth = self.maxCellWidth;
+    double maxCellHeight = self.maxCellHeight;
+    
+    BOOL flipped = NO;
+    if (aspectRatio > 1) {
+        flipped = YES;
+        overallHeight = ABS(self.size.width);
+        overallWidth = ABS(self.size.height);
+        aspectRatio = 1.0/aspectRatio;
+        minCellWidth = self.minCellHeight;
+        minCellHeight = self.minCellWidth;
+        maxCellWidth = self.maxCellHeight;
+        maxCellHeight = self.maxCellWidth;
+    }
+    
+    if (minCellWidth < 0) minCellWidth = 0;
+    if (minCellHeight < 0) minCellHeight = 0;
+    
+    // Tom: This is where things deviate from validate below
+    
+    // calculate cell size based on the number of columns and rows we can fit - max rows will be
+    NSUInteger maxRows = self.minimumNumberOfCells / self.maxColumns;
+    maxRows += self.minimumNumberOfCells % self.maxColumns > 0 ? 1 : 0;
+    
+    // tune to aspect ratio by cell sizes based on column x row grid
+    double cellWidth = overallWidth / self.maxColumns;
+    double cellHeight = overallHeight / maxRows;
+    
+    // normalize to aspect ratio to figure out which dimension is most constrained
+    if (cellHeight * self.cellAspectRatio > cellWidth) {
+        // the constraint is cell width - build based on that
+        cellHeight = cellWidth * (1.0 / self.cellAspectRatio);
+    } else {
+        // the constraint is cell height - build based on that
+        cellWidth = cellHeight * self.cellAspectRatio;
+    }
+    
+    if ((double)cellWidth < minCellWidth || (double)cellHeight < minCellHeight ||
+        (maxCellWidth != 0 && (double)cellWidth > maxCellWidth) || (maxCellHeight != 0 && (double)cellHeight > maxCellHeight)) {
+        self.unresolvable = YES;
+    
+    } else {
+        if (flipped) {
+            self.rowCount = self.maxColumns;
+            self.columnCount = maxRows;
+            self.cellSize = CGSizeMake((double)cellHeight, (double)cellWidth);
+        } else {
+            self.rowCount = maxRows;
+            self.columnCount = self.maxColumns;
+            self.cellSize = CGSizeMake((double)cellWidth, (double)cellHeight);
+        }
+        self.resolved = YES;
+        
+    }
+    
+    if (!self.resolved) {
+        self.rowCount = 0;
+        self.columnCount = 0;
+        self.cellSize = CGSizeZero;
+    }
+}
+
+- (void)validateMaximizingGridUse
 {
     if (self.resolved) return;    // already valid, nothing to do
     if (self.unresolvable) return;  // already tried to validate and couldn't
@@ -86,6 +167,19 @@
         self.rowCount = 0;
         self.columnCount = 0;
         self.cellSize = CGSizeZero;
+    }
+}
+
+-(void)validate
+{
+    if (self.resolved) return;    // already valid, nothing to do
+    if (self.unresolvable) return;  // already tried to validate and couldn't
+    
+
+    if (self.maxColumns > 0) {
+        [self validateOnMaxColumn];
+    } else {
+        [self validateMaximizingGridUse];
     }
 }
 

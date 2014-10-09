@@ -40,6 +40,12 @@ const int SET_GAME_REQUIRED_MATCHES_DEFAULT = 3;
     return SET_GAME_REQUIRED_MATCHES_DEFAULT;
 }
 
+const int SET_GAME_CARDS_DEALT_DEFAULT = 20;
+- (int)cardsToDeal
+{
+    return SET_GAME_CARDS_DEALT_DEFAULT;
+}
+
 #pragma mark - UI update methods and overrides
 
 

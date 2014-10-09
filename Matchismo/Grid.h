@@ -25,12 +25,12 @@
 // Setting minimum cell widths and heights is completely optional ({min,max}Cell{Width,Height})
 
 @interface Grid : NSObject
-
 // required inputs (zero is not a valid value for any of these)
 
 @property (nonatomic) CGSize size;                      // overall available space to put grid into
-@property (nonatomic) CGFloat cellAspectRatio;          // width divided by height (of each cell)
+@property (nonatomic) CGFloat cellAspectRatio;          // width divided by height (of each cell) -- set this OR set cellAspectRatioBySize
 @property (nonatomic) NSUInteger minimumNumberOfCells;
+@property (nonatomic) NSUInteger maxColumns;            // if set, fixes the columnCount here and builds the grid accordingly around aspec and num cells
 
 // optional inputs (non-positive values are ignored)
 

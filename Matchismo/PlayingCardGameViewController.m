@@ -29,4 +29,10 @@ const int GAME_REQUIRED_MATCHES_DEFAULT = 2;
     return GAME_REQUIRED_MATCHES_DEFAULT;
 }
 
+const int PLAYING_GAME_CARDS_DEALT_DEFAULT = 20;
+- (int)cardsToDeal
+{
+    return PLAYING_GAME_CARDS_DEALT_DEFAULT;
+}
+
 @end
